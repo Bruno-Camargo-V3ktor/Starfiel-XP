@@ -55,18 +55,45 @@ impl ApplicationHandler for App {
                     surface.resize(width, height).unwrap();
 
                     let mut buffer = surface.buffer_mut().unwrap();
-                    let windth_u32 = width.get();
+                    let width_u32 = width.get();
+                    let height_u32 = height.get();
 
-                    for index in 0..buffer.len() {
-                        let y = index as u32 / windth_u32;
-                        let x = index as u32 % windth_u32;
+                    buffer.fill(0xFF202020);
 
-                        let red = x % 255;
-                        let green = y % 255;
-                        let blue = (x * y) % 255;
+                    let rect_x = 200;
+                    let rect_y = 200;
+                    let rect_w = 100;
+                    let rect_h = 100;
+                    let rect_color: u32 = 0xFFFF1100;
 
-                        let color: u32 = blue | (green << 8) | (red << 16);
-                        buffer[index] = color;
+                    for y in rect_y..(rect_y + rect_h) {
+                        for x in rect_x..(rect_x + rect_w) {
+                            if (x < 0 || x >= width_u32) || (y < 0 || y >= height_u32) {
+                                continue;
+                            }
+
+                            let index = (y * width_u32 + x) as usize;
+
+                            buffer[index] = rect_color;
+                        }
+                    }
+
+                    let rect_x = 270;
+                    let rect_y = 270;
+                    let rect_w = 100;
+                    let rect_h = 100;
+                    let rect_color: u32 = 0x110011FF;
+
+                    for y in rect_y..(rect_y + rect_h) {
+                        for x in rect_x..(rect_x + rect_w) {
+                            if (x < 0 || x >= width_u32) || (y < 0 || y >= height_u32) {
+                                continue;
+                            }
+
+                            let index = (y * width_u32 + x) as usize;
+
+                            buffer[index] = rect_color;
+                        }
                     }
 
                     buffer.present().unwrap();
