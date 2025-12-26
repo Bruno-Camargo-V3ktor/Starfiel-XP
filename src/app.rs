@@ -95,8 +95,30 @@ impl ApplicationHandler for App {
                     let speed = 10.0;
                     let spread = 1000.0;
 
-                    for star in self.stars.iter_mut() {
+                    let half_width = width.get() as f32 / 2.0;
+                    let half_height = height.get() as f32 / 2.0;
+
+                    for star in &mut self.stars {
                         star.update(speed, spread, spread);
+
+                        let scale_factor = width.get() as f32 * 0.5;
+
+                        let sx = (star.x / star.z) * scale_factor + half_width;
+                        let sy = (star.y / star.z) * scale_factor + half_height;
+
+                        let screen_x = sx as i32;
+                        let screen_y = sy as i32;
+
+                        if screen_x >= 0
+                            && screen_x < width.get() as i32
+                            && screen_y >= 0
+                            && screen_y < height.get() as i32
+                        {
+                            let pixel_index =
+                                (screen_y as u32 * width.get() + screen_x as u32) as usize;
+
+                            buffer[pixel_index] = 0xFFFFFFFF;
+                        }
                     }
 
                     buffer.present().unwrap();
