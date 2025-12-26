@@ -72,40 +72,31 @@ impl ApplicationHandler for App {
 
                     buffer.fill(0xFF202020);
 
-                    let rect_x = 200;
-                    let rect_y = 200;
-                    let rect_w = 100;
-                    let rect_h = 100;
-                    let rect_color: u32 = 0xFFFF1100;
+                    /*
+                        let rect_x = 200;
+                        let rect_y = 200;
+                        let rect_w = 100;
+                        let rect_h = 100;
+                        let rect_color: u32 = 0xFFFF1100;
 
-                    for y in rect_y..(rect_y + rect_h) {
-                        for x in rect_x..(rect_x + rect_w) {
-                            if (x < 0 || x >= width_u32) || (y < 0 || y >= height_u32) {
-                                continue;
+                        for y in rect_y..(rect_y + rect_h) {
+                            for x in rect_x..(rect_x + rect_w) {
+                                if (x < 0 || x >= width_u32) || (y < 0 || y >= height_u32) {
+                                    continue;
+                                }
+
+                                let index = (y * width_u32 + x) as usize;
+
+                                buffer[index] = rect_color;
                             }
-
-                            let index = (y * width_u32 + x) as usize;
-
-                            buffer[index] = rect_color;
                         }
-                    }
+                    */
 
-                    let rect_x = 270;
-                    let rect_y = 270;
-                    let rect_w = 100;
-                    let rect_h = 100;
-                    let rect_color: u32 = 0x110011FF;
+                    let speed = 10.0;
+                    let spread = 1000.0;
 
-                    for y in rect_y..(rect_y + rect_h) {
-                        for x in rect_x..(rect_x + rect_w) {
-                            if (x < 0 || x >= width_u32) || (y < 0 || y >= height_u32) {
-                                continue;
-                            }
-
-                            let index = (y * width_u32 + x) as usize;
-
-                            buffer[index] = rect_color;
-                        }
+                    for star in self.stars.iter_mut() {
+                        star.update(speed, spread, spread);
                     }
 
                     buffer.present().unwrap();
