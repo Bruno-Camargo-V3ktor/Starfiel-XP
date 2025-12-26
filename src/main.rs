@@ -2,7 +2,7 @@ use app::App;
 use winit::event_loop::{ControlFlow, EventLoop};
 
 mod app;
-
+mod star;
 fn main() {
     let mut app = App::default();
 

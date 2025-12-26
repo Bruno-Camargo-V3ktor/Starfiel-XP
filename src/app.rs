@@ -6,11 +6,15 @@ use winit::{
     window::{Window, WindowAttributes},
 };
 
+use crate::star::Star;
+
 #[derive(Default)]
 pub struct App {
     pub window: Option<Arc<Window>>,
     pub context: Option<softbuffer::Context<Arc<Window>>>,
     pub surface: Option<softbuffer::Surface<Arc<Window>, Arc<Window>>>,
+
+    pub stars: Vec<Star>,
 }
 
 impl ApplicationHandler for App {
@@ -28,6 +32,14 @@ impl ApplicationHandler for App {
 
             self.context = Some(context);
             self.surface = Some(surface);
+
+            let count = 1000;
+            let initial_spread = 1000.0;
+
+            for _ in 0..count {
+                self.stars
+                    .push(Star::new_rng(initial_spread, initial_spread));
+            }
         }
     }
 
