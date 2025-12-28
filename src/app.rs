@@ -67,12 +67,12 @@ impl ApplicationHandler for App {
                     surface.resize(width, height).unwrap();
 
                     let mut buffer = surface.buffer_mut().unwrap();
-                    let width_u32 = width.get();
-                    let height_u32 = height.get();
-
                     buffer.fill(0xFF202020);
 
                     /*
+                        let width_u32 = width.get();
+                        let height_u32 = height.get();
+
                         let rect_x = 200;
                         let rect_y = 200;
                         let rect_w = 100;
@@ -93,7 +93,8 @@ impl ApplicationHandler for App {
                     */
 
                     let speed = 10.0;
-                    let spread = 1000.0;
+                    let spread = 500.0;
+                    let max_depth = 2000.0;
 
                     let half_width = width.get() as f32 / 2.0;
                     let half_height = height.get() as f32 / 2.0;
@@ -101,23 +102,27 @@ impl ApplicationHandler for App {
                     for star in &mut self.stars {
                         star.update(speed, spread, spread);
 
-                        let scale_factor = width.get() as f32 * 0.5;
+                        let scale_factor = width.get() as f32;
 
                         let sx = (star.x / star.z) * scale_factor + half_width;
                         let sy = (star.y / star.z) * scale_factor + half_height;
 
-                        let screen_x = sx as i32;
-                        let screen_y = sy as i32;
+                        let proximity = 1.0 - (star.z / max_depth);
+                        let star_size = proximity * star.size;
+                        let radius = (star_size / 2.0).max(1.0) as i32;
 
-                        if screen_x >= 0
-                            && screen_x < width.get() as i32
-                            && screen_y >= 0
-                            && screen_y < height.get() as i32
-                        {
-                            let pixel_index =
-                                (screen_y as u32 * width.get() + screen_x as u32) as usize;
+                        for y in (sy as i32 - radius)..(sy as i32 + radius) {
+                            for x in (sx as i32 - radius)..(sx as i32 + radius) {
+                                let is_inside_screen = x >= 0
+                                    && x < width.get() as i32
+                                    && y >= 0
+                                    && y < height.get() as i32;
 
-                            buffer[pixel_index] = 0xFFFFFFFF;
+                                if is_inside_screen {
+                                    let index = (y as u32 * width.get() + x as u32) as usize;
+                                    buffer[index] = 0xFFFFFFFF;
+                                }
+                            }
                         }
                     }
 
